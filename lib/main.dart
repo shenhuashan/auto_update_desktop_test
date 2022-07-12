@@ -1,124 +1,194 @@
-import 'package:desktop_test/country_page.dart';
-import 'package:desktop_test/splash_screen.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
 
-void main() => runApp(MyApp());
+import 'package:desktop_test/application.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'In App Updates in Flutter Desktop App',
       debugShowCheckedModeBanner: false,
-      home: AutoCompleteDemo(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'In App Updates in Flutter Desktop App'),
     );
   }
 }
 
-const List<Country> countryOptions = <Country>[
-  Country(name: 'Africa', size: 30370000),
-  Country(name: 'Asia', size: 44579000),
-  Country(name: 'Australia', size: 8600000),
-  Country(name: 'Bulgaria', size: 110879),
-  Country(name: 'Canada', size: 9984670),
-  Country(name: 'Denmark', size: 42916),
-  Country(name: 'Europe', size: 10180000),
-  Country(name: 'India', size: 3287263),
-  Country(name: 'North America', size: 24709000),
-  Country(name: 'South America', size: 17840000),
-];
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
-class AutoCompleteDemo extends StatefulWidget {
+  final String title;
+
   @override
-  State<StatefulWidget> createState() => _AutoCompleteDemoState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _AutoCompleteDemoState extends State<AutoCompleteDemo> {
+class _MyHomePageState extends State<MyHomePage> {
+  bool isDownloading = false;
+  double downloadProgress = 0;
+  String downloadedFilePath = "";
+  Future<Map<String, dynamic>> loadJsonFromGithub() async {
+    final response = await http.read(Uri.parse(
+        "https://raw.githubusercontent.com/AgnelSelvan/Blogs/main/in_app_update_flutter_desktop/app_versions_check/version.json"));
+    return jsonDecode(response);
+  }
+
+  Future<void> openExeFile(String filePath) async {
+    await Process.start(filePath, ["-t", "-l", "1000"]).then((value) {});
+  }
+
+  Future<void> openDMGFile(String filePath) async {
+    await Process.start(
+        "MOUNTDEV=\$(hdiutil mount '$filePath' | awk '/dev.disk/{print\$1}')",
+        []).then((value) {
+      debugPrint("Value: $value");
+    });
+  }
+
+  Future downloadNewVersion(String appPath) async {
+    final fileName = appPath.split("/").last;
+    isDownloading = true;
+    setState(() {});
+
+    final dio = Dio();
+
+    downloadedFilePath =
+        "${(await getApplicationDocumentsDirectory()).path}/$fileName";
+
+    await dio.download(
+      "https://github.com/AgnelSelvan/Blogs/raw/main/in_app_update_flutter_desktop/app_versions_check/$appPath",
+      downloadedFilePath,
+      onReceiveProgress: (received, total) {
+        final progress = (received / total) * 100;
+        debugPrint('Rec: $received , Total: $total, $progress%');
+        downloadProgress = double.parse(progress.toStringAsFixed(1));
+        setState(() {});
+      },
+    );
+    debugPrint("File Downloaded Path: $downloadedFilePath");
+    if (Platform.isWindows) {
+      await openExeFile(downloadedFilePath);
+    }
+    isDownloading = false;
+    setState(() {});
+  }
+
+  showUpdateDialog(Map<String, dynamic> versionJson) {
+    final version = versionJson['version'];
+    final updates = versionJson['description'] as List;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            contentPadding: const EdgeInsets.all(10),
+            title: Text("Latest Version $version"),
+            children: [
+              Text("What's new in $version"),
+              const SizedBox(
+                height: 5,
+              ),
+              ...updates
+                  .map((e) => Row(
+                        children: [
+                          Container(
+                            width: 4,
+                            height: 4,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[400],
+                                borderRadius: BorderRadius.circular(20)),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "$e",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ))
+                  .toList(),
+              const SizedBox(
+                height: 10,
+              ),
+              if (version > ApplicationConfig.currentVersion)
+                TextButton.icon(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      if (Platform.isMacOS) {
+                        downloadNewVersion(versionJson["macos_file_name"]);
+                      }
+                      if (Platform.isWindows) {
+                        downloadNewVersion(versionJson["windows_file_name"]);
+                      }
+                    },
+                    icon: const Icon(Icons.update),
+                    label: const Text("Update")),
+            ],
+          );
+        });
+  }
+
+  Future<void> _checkForUpdates() async {
+    final jsonVal = await loadJsonFromGithub();
+    debugPrint("Response: $jsonVal");
+    showUpdateDialog(jsonVal);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Flutter Version 1.0.0'),
-        backgroundColor: Colors.cyan,
+        title: Text(widget.title),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Autocomplete<Country>(
-          optionsBuilder: (TextEditingValue textEditingValue) {
-            return countryOptions
-                .where((Country county) => county.name
-                    .toLowerCase()
-                    .startsWith(textEditingValue.text.toLowerCase()))
-                .toList();
-          },
-          displayStringForOption: (Country option) => option.name,
-          fieldViewBuilder: (BuildContext context,
-              TextEditingController fieldTextEditingController,
-              FocusNode fieldFocusNode,
-              VoidCallback onFieldSubmitted) {
-            return TextField(
-              controller: fieldTextEditingController,
-              focusNode: fieldFocusNode,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+      body: Center(
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Current Version is ${ApplicationConfig.currentVersion}',
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                if (!isDownloading && downloadedFilePath != "")
+                  Text("File Downloaded in $downloadedFilePath")
+              ],
+            ),
+            if (isDownloading)
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.black.withOpacity(0.3),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    Text("${downloadProgress.toStringAsFixed(1)} %")
+                  ],
                 ),
-                disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            );
-          },
-          onSelected: (Country selection) {
-            print('Selected: ${selection.name}');
-          },
-          optionsViewBuilder: (BuildContext context,
-              AutocompleteOnSelected<Country> onSelected,
-              Iterable<Country> options) {
-            return Align(
-              alignment: Alignment.topLeft,
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  width: 600,
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey,
-                  ),
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(10.0),
-                    itemCount: options.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final Country option = options.elementAt(index);
-
-                      return ListTile(
-                        onTap: (){
-                        onSelected(option);
-
-                        },
-                        title: Text(
-                          option.name,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        hoverColor: Colors.red,
-                        focusColor: Colors.blueGrey,
-                        tileColor: Colors.blue,
-                        enabled: true,
-                        focusNode: FocusNode(),
-                        
-                      );
-                    },
-                  ),
-                ),
-              ),
-            );
-          },
+              )
+          ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _checkForUpdates,
+        tooltip: 'Check for Updates',
+        child: const Icon(Icons.update),
       ),
     );
   }
