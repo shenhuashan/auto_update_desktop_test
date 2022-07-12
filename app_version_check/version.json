@@ -5,6 +5,6 @@
         "First updates"
     ],
     "macos_file_name":"installers/macos/in_app_update_flutter.dmg",
-    "windows_file_name":"installers/AutoUpdate.exe",
+    "windows_file_name":"installers/mysetup.exe",
     "linux_file_name":""
 }
