@@ -1,10 +1,10 @@
 {
     "name":"In APP UPDATE FLUTTER APP",
-    "version":1.0,
+    "version":1.1,
     "description":[
         "First updates"
     ],
     "macos_file_name":"installers/macos/in_app_update_flutter.dmg",
-    "windows_file_name":"installers/widnows/mysetup.exe",
+    "windows_file_name":"installers/auto_update_iss.exe",
     "linux_file_name":""
 }

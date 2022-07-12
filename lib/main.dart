@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String downloadedFilePath = "";
   Future<Map<String, dynamic>> loadJsonFromGithub() async {
     final response = await http.read(Uri.parse(
-        "https://raw.githubusercontent.com/AgnelSelvan/Blogs/main/in_app_update_flutter_desktop/app_versions_check/version.json"));
+        "https://github.com/Lazizbek97/auto_update_desktop_test/blob/main/app_version_check/version.json"));
     return jsonDecode(response);
   }
 
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "${(await getApplicationDocumentsDirectory()).path}/$fileName";
 
     await dio.download(
-      "https://github.com/AgnelSelvan/Blogs/raw/main/in_app_update_flutter_desktop/app_versions_check/$appPath",
+      "https://github.com/Lazizbek97/auto_update_desktop_test/blob/main/$appPath",
       downloadedFilePath,
       onReceiveProgress: (received, total) {
         final progress = (received / total) * 100;
