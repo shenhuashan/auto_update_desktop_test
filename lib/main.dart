@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String downloadedFilePath = "";
   Future<Map<String, dynamic>> loadJsonFromGithub() async {
     final response = await http.read(Uri.parse(
-        "https://raw.githubusercontent.com/Lazizbek97/auto_update_api/main/version.json"));
+        "https://raw.githubusercontent.com/Lazizbek97/auto_update_desktop_test/main/app_version_check/version.json"));
     print("------------------------------------------");
     print(json.decode(response));
 
