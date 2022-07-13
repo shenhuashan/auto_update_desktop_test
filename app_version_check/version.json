@@ -4,7 +4,7 @@
     "description":[
         "First updates"
     ],
-    "macos_file_name":"installers/macos/in_app_update_flutter.dmg",
+    "macos_file_name":"",
     "windows_file_name":"installers/FlutterDesktop.exe",
     "linux_file_name":""
 }
