@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "FlutterUpdate"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.1"
 #define MyAppPublisher "My Company, Inc."
 #define MyAppURL "https://www.example.com/"
 #define MyAppExeName "desktop_test.exe"
