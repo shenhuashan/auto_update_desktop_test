@@ -1,10 +1,10 @@
 {
     "name":"In APP UPDATE FLUTTER APP",
-    "version":2.1,
+    "version":1.0,
     "description":[
         "First updates"
     ],
     "macos_file_name":"",
-    "windows_file_name":"installers/FlutterDesktop.exe",
+    "windows_file_name":"installers/mysetup.exe",
     "linux_file_name":""
 }
