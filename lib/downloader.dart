@@ -3,7 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:desktop_test/data.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -25,6 +26,7 @@ class Downloader extends StatefulWidget {
 
 class DownloaderState extends State<Downloader>
     with WindowListener, TrayListener {
+  // final _messangerKey = GlobalKey<ScaffoldMessengerState>();
   @override
   void initState() {
     super.initState();
@@ -104,20 +106,24 @@ class DownloaderState extends State<Downloader>
       }).timeout(const Duration(minutes: 8));
     } catch (e, st) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          e.toString(),
-          // endColor: Colors.red,
-          // duration: const Duration(milliseconds: 300),
-        ),
-        action: SnackBarAction(
-          onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const Downloader()));
-          },
-          label: 'Retry',
-        ),
-      ));
+      print("Erorr: $e");
+      print(st);
+      showSnackbar(
+          context,
+          Snackbar(
+            content: Text(
+              e.toString(),
+              // endColor: Colors.red,
+              // duration: const Duration(milliseconds: 300),
+            ),
+            action: material.SnackBarAction(
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    FluentPageRoute(builder: (context) => const Downloader()));
+              },
+              label: 'Retry',
+            ),
+          ));
       windowManager.setSize(const Size(600, 600));
       log(e.toString(), stackTrace: st);
       error = true;
@@ -137,8 +143,8 @@ class DownloaderState extends State<Downloader>
       onPanStart: (details) {
         windowManager.startDragging();
       },
-      child: Scaffold(
-          body: Center(
+      child: ScaffoldPage(
+          content: Center(
         child: SizedBox(
           height: 200,
           width: 200,
@@ -172,7 +178,7 @@ class DownloaderState extends State<Downloader>
               : Center(
                   child: Stack(
                     children: [
-                      const Center(child: CircularProgressIndicator.adaptive()),
+                      const Center(child: Text("Loading...")),
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +186,7 @@ class DownloaderState extends State<Downloader>
                             Text(
                               text,
                               style: const TextStyle(
-                                  fontSize: 15, color: Colors.white),
+                                  fontSize: 15, color: Colors.black),
                             ),
                             Text(
                               '${progress.toStringAsFixed(1)} %',
@@ -199,14 +205,14 @@ class DownloaderState extends State<Downloader>
   }
 
   Future<void> _handleClickRestore() async {
-    await windowManager.setIcon('assets/app_icon.ico');
+    await windowManager.setIcon('assets/qatar_splash.png');
     windowManager.restore();
     windowManager.show();
   }
 
   Future<void> _trayInit() async {
     await trayManager.setIcon(
-      'assets/app_icon.ico',
+      'assets/qatar_splash.png',
     );
     Menu menu = Menu(items: [
       tr_manager.MenuItem(key: 'show-app', label: 'Show'),
