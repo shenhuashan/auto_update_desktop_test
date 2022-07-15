@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
@@ -7,11 +6,8 @@ import 'package:desktop_test/data.dart';
 import 'package:desktop_test/downloader.dart';
 import 'package:desktop_test/loading.dart';
 import 'package:desktop_test/utility.dart';
-import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -63,7 +59,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // bool isDownloading = false;
   // double downloadProgress = 0;
-  // String downloadedFilePath = "";
+  String versionNumber = "";
   // Future<Map<String, dynamic>> loadJsonFromGithub() async {
   //   final response = await http.read(Uri.parse(
   //       "https://raw.githubusercontent.com/Lazizbek97/auto_update_desktop_test/main/app_version_check/version.json"));
@@ -192,6 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> checkGitVersion(String version) async {
+    versionNumber = version;
     try {
       Data data = await Data.getData();
       if (int.parse(data.tagName.replaceAll('.', '')) >
@@ -286,7 +283,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Current Version is ${ApplicationConfig.currentVersion}',
+                  'Current Version is $versionNumber',
                 ),
               ],
             ),
@@ -294,10 +291,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: material.FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
             await checkGitVersion(await checkVersion());
           });
+          setState(() {});
           print("sdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         },
         tooltip: 'Check for Updates',
