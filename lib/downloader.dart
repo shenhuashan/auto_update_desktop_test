@@ -64,7 +64,7 @@ class DownloaderState extends State<Downloader>
       }
       Dio dio = Dio();
       await dio.download(
-          data.assets.last.browserDownloadUrl, '${docWTbgA.path}\\update.zip',
+          "https://github.com/Lazizbek97/auto_update_desktop_test/archive/refs/tags/v3.0.0.0.zip", '${docWTbgA.path}\\update.zip',
           onReceiveProgress: (downloaded, full) async {
         progress = downloaded / full * 100;
         setState(() {});

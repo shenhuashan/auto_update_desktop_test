@@ -100,10 +100,13 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 msix_config:
-  display_name: desktop_test
-  publisher_display_name: desktop_test
+  display_name: MyApp
+  publisher_display_name: MyName
   identity_name: MyCompany.MySuite.MyApp
-  msix_version: 2.8.18.0
-  publisher: CN=My Company, O=My Company, L=Berlin, S=Berlin, C=DE
+  msix_version: 3.0.0.0
+  certificate_path: C:\Users\Lazizbek\Desktop\desktop_test\CERTIFICATE.pfx
+  certificate_password: 12345678
+  logo_path: C:\Users\Lazizbek\Desktop\desktop_test\assets\qatar_splash.png
+  start_menu_icon_path: C:\Users\Lazizbek\Desktop\desktop_test\assets\qatar_splash.png
+  tile_icon_path: C:\Users\Lazizbek\Desktop\desktop_test\assets\qatar_splash.png
   architecture: x64
-  capabilities: 'internetClient,location,microphone,webcam'

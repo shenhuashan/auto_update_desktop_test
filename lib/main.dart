@@ -270,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return material.Scaffold(
       appBar: material.AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.red,
         title: Text(
           widget.title,
           style: const TextStyle(color: Colors.white),
