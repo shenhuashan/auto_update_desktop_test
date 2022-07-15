@@ -37,6 +37,14 @@ dependencies:
   http: ^0.13.4
   dio: ^4.0.6
   path_provider: ^2.0.11
+  window_manager: ^0.2.5
+  tray_manager: ^0.1.8
+  win_toast: ^0.0.2
+  archive: ^3.3.0
+  fluent_ui: ^3.12.0
+  msix: ^2.8.18
+
+
 
 dev_dependencies:
   flutter_test:
@@ -90,3 +98,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+msix_config:
+  display_name: desktop_test
+  publisher_display_name: desktop_test
+  identity_name: MyCompany.MySuite.MyApp
+  msix_version: 2.8.18.0
+  publisher: CN=My Company, O=My Company, L=Berlin, S=Berlin, C=DE
+  architecture: x64
+  capabilities: 'internetClient,location,microphone,webcam'

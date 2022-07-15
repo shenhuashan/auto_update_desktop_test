@@ -5,6 +5,6 @@
         "First updates"
     ],
     "macos_file_name":"",
-    "windows_file_name":"installers/mysetup.exe",
+    "windows_file_name":"installers/desktop_test.msix",
     "linux_file_name":""
 }

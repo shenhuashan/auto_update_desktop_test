@@ -50,10 +50,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return json.decode(response);
   }
 
+  // this id for Windows
   Future<void> openExeFile(String filePath) async {
     await Process.start(filePath, ["-t", "-l", "1000"]).then((value) {});
   }
 
+  // this for Mac
   Future<void> openDMGFile(String filePath) async {
     await Process.start(
         "MOUNTDEV=\$(hdiutil mount '$filePath' | awk '/dev.disk/{print\$1}')",
@@ -84,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     debugPrint("File Downloaded Path: $downloadedFilePath");
     if (Platform.isWindows) {
-      await openExeFile(downloadedFilePath);
+      await openExeFile(downloadedFilePath, );
     }
     isDownloading = false;
     setState(() {});
