@@ -53,7 +53,7 @@ class DownloaderState extends State<Downloader>
     await windowManager.setSize(const Size(230, 300));
     await windowManager.center();
     try {
-      Data data = await Data.getData();
+      // Data data = await Data.getData();
       Directory docDir = await getApplicationDocumentsDirectory();
       String docPath = docDir.path;
       Directory docWTbgA =
