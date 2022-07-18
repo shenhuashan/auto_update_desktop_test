@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:async';
-import 'package:desktop_test/application.dart';
 import 'package:desktop_test/data.dart';
 import 'package:desktop_test/downloader.dart';
 import 'package:desktop_test/loading.dart';
@@ -17,15 +16,9 @@ void main() async {
   // await Window.initialize();
   await windowManager.waitUntilReadyToShow().then((_) async {
     await windowManager.setResizable(true);
-    await windowManager.setTitle('WTbgA');
+    await windowManager.setTitle('desktop_test');
     await windowManager.setIcon('assets/qatar_splash.png');
-    // appDocPath = await AppUtil.getAppDocsPath();
 
-    // if (SysInfo.operatingSystemName.contains('Windows 11')) {
-    //   await Window.setEffect(effect: WindowEffect.acrylic, color: const Color(0xCC222222), dark: true);
-    // } else {
-    //   await Window.setEffect(effect: WindowEffect.aero, color: const Color(0xCC222222), dark: true);
-    // }
     await windowManager.show();
   });
   runApp(const MyApp());
@@ -39,9 +32,6 @@ class MyApp extends StatelessWidget {
     return const FluentApp(
       title: 'In App Updates in Flutter Desktop App',
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData(
-      //   primarySwatch: Colors.blue,
-      // ),
       home: Loading(),
     );
   }
@@ -57,124 +47,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // bool isDownloading = false;
-  // double downloadProgress = 0;
   String versionNumber = "";
-  // Future<Map<String, dynamic>> loadJsonFromGithub() async {
-  //   final response = await http.read(Uri.parse(
-  //       "https://raw.githubusercontent.com/Lazizbek97/auto_update_desktop_test/main/app_version_check/version.json"));
-  //   print("------------------------------------------");
-  //   print(json.decode(response));
-
-  //   return json.decode(response);
-  // }
-
-  // // this id for Windows
-  // Future<void> openExeFile(String filePath) async {
-  //   await Process.run(filePath, []).then((value) {});
-  // }
-
-  // // this for Mac
-  // Future<void> openDMGFile(String filePath) async {
-  //   await Process.start(
-  //       "MOUNTDEV=\$(hdiutil mount '$filePath' | awk '/dev.disk/{print\$1}')",
-  //       []).then((value) {
-  //     debugPrint("Value: $value");
-  //   });
-  // }
-
-  // Future downloadNewVersion(String appPath) async {
-  //   final fileName = appPath.split("/").last;
-  //   isDownloading = true;
-  //   setState(() {});
-
-  //   final dio = Dio();
-
-  //   downloadedFilePath =
-  //       "${(await getApplicationDocumentsDirectory()).path}/$fileName";
-
-  //   await dio.download(
-  //     "https://github.com/Lazizbek97/auto_update_desktop_test/blob/main/$appPath",
-  //     downloadedFilePath,
-  //     onReceiveProgress: (received, total) {
-  //       final progress = (received / total) * 100;
-  //       debugPrint('Rec: $received , Total: $total, $progress%');
-  //       downloadProgress = double.parse(progress.toStringAsFixed(1));
-  //       setState(() {});
-  //     },
-  //   );
-  //   debugPrint("File Downloaded Path: $downloadedFilePath");
-  //   if (Platform.isWindows) {
-  //     await openExeFile(
-  //       downloadedFilePath,
-  //     );
-  //   }
-  //   isDownloading = false;
-  //   setState(() {});
-  // }
-
-  // showUpdateDialog(Map<String, dynamic> versionJson) {
-  //   final version = versionJson['version'];
-  //   final updates = versionJson['description'] as List;
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return material.SimpleDialog(
-  //           contentPadding: const EdgeInsets.all(10),
-  //           title: Text("Latest Version $version"),
-  //           children: [
-  //             Text("What's new in $version"),
-  //             const SizedBox(
-  //               height: 5,
-  //             ),
-  //             ...updates
-  //                 .map((e) => Row(
-  //                       children: [
-  //                         Container(
-  //                           width: 4,
-  //                           height: 4,
-  //                           decoration: BoxDecoration(
-  //                               color: Colors.grey[400],
-  //                               borderRadius: BorderRadius.circular(20)),
-  //                         ),
-  //                         const SizedBox(
-  //                           width: 10,
-  //                         ),
-  //                         Text(
-  //                           "$e",
-  //                           style: TextStyle(
-  //                             color: Colors.grey[600],
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ))
-  //                 .toList(),
-  //             const SizedBox(
-  //               height: 10,
-  //             ),
-  //             if (version > ApplicationConfig.currentVersion)
-  //               material.TextButton.icon(
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                     if (Platform.isMacOS) {
-  //                       downloadNewVersion(versionJson["macos_file_name"]);
-  //                     }
-  //                     if (Platform.isWindows) {
-  //                       downloadNewVersion(versionJson["windows_file_name"]);
-  //                     }
-  //                   },
-  //                   icon: const Icon(material.Icons.update),
-  //                   label: const Text("Update")),
-  //           ],
-  //         );
-  //       });
-  // }
-
-  // Future<void> _checkForUpdates() async {
-  //   final jsonVal = await loadJsonFromGithub();
-  //   debugPrint("Response: $jsonVal");
-  //   showUpdateDialog(jsonVal);
-  // }
 
   Future<String> checkVersion() async {
     try {
@@ -259,12 +132,6 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  // }
 
   @override
   Widget build(BuildContext context) {

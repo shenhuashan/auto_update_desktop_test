@@ -64,7 +64,8 @@ class DownloaderState extends State<Downloader>
       }
       Dio dio = Dio();
       await dio.download(
-          "https://github.com/Lazizbek97/auto_update_desktop_test/archive/refs/tags/v3.0.0.0.zip", '${docWTbgA.path}\\update.zip',
+          "https://github.com/Lazizbek97/auto_update_desktop_test/releases/download/v3.0.0.0/installers.zip",
+          '${docWTbgA.path}\\update.zip',
           onReceiveProgress: (downloaded, full) async {
         progress = downloaded / full * 100;
         setState(() {});
@@ -138,6 +139,9 @@ class DownloaderState extends State<Downloader>
 
   @override
   Widget build(BuildContext context) {
+    print("___________________________________________________");
+    print(text);
+    
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onPanStart: (details) {
