@@ -103,7 +103,7 @@ msix_config:
   display_name: MyApp
   publisher_display_name: MyName
   identity_name: MyCompany.MySuite.MyApp
-  msix_version: 3.0.0.0
+  msix_version: 2.0.0.0
   certificate_path: C:\Users\Lazizbek\Desktop\desktop_test\CERTIFICATE.pfx
   certificate_password: 12345678
   logo_path: C:\Users\Lazizbek\Desktop\desktop_test\assets\qatar_splash.png
